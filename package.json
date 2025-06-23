@@ -1,0 +1,49 @@
+{
+  "name": "gestor-de-gastos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main/main.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:react\" \"npm run dev:backend\" \"npm run dev:electron-wait\"",
+    "dev:react": "cd renderer && npm run dev",
+    "dev:backend": "node server/index.js",
+    "dev:electron-wait": "wait-on http://localhost:5173 && npm run dev:electron",
+    "dev:electron": "electron .",
+    "build": "cd renderer && npm run build",
+    "package": "electron-builder"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^36.5.0",
+    "electron-builder": "^26.0.12",
+    "wait-on": "^8.0.3"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "express": "^4.21.2"
+  },
+  "build": {
+    "appId": "com.gestorgastos.app",
+    "productName": "GastosApp",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main/**/*",
+      "server/**/*",
+      "renderer/dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "server/db/",
+        "to": "db",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  }
+}

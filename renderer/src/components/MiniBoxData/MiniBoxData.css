@@ -1,0 +1,6 @@
+.mini-box-data{
+    display: flex;
+    flex-direction: column;
+    width: 150px;
+    height: 100%;
+}
