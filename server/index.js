@@ -7,6 +7,9 @@ const subcategoriesRoutes = require('./routes/subcategoriesRoute');
 const paymentMethodsRoutes = require('./routes/paymentMethodsRoute');
 const incomesRoutes = require('./routes/incomesRoute');
 
+const cors = require('cors');
+app.use(cors());
+
 app.use(express.json());
 
 // Rutas

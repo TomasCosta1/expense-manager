@@ -9,6 +9,37 @@ exports.getAllIncomes = (req, res) => {
     }
 }
 
+exports.getAllAmountIncomes = async (req, res) => {
+    try {
+        const incomes = await IncomesModel.getAllIncomes();
+
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth(); // 0-based
+
+        const filteredIncomes = incomes.filter(e => {
+            const [year, month] = e.date.split("-").map(Number);
+            return year === currentYear && month - 1 === currentMonth;
+        });
+
+        const amountsByDate = filteredIncomes.reduce((acc, e) => {
+            const dateKey = e.date;
+            if (!acc[dateKey]) acc[dateKey] = 0;
+            acc[dateKey] += e.amount;
+            return acc;
+        }, {});
+
+        const amounts = Object.entries(amountsByDate)
+            .sort((a, b) => new Date(a[0]) - new Date(b[0]))
+            .map(([_, amount]) => amount);
+
+        res.json(amounts);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
 exports.getIncomeById = (req, res) => {
     const { id } = req.params;
 
@@ -28,26 +59,20 @@ exports.createIncome = (req, res) => {
     const {
         name,
         amount,
-        category_id,
-        subcategory_id,
         date,
-        payment_method_id,
     } = req.body;
 
-    if (!amount || !category_id || !date) {
+    if (!amount || !date) {
         return res
             .status(400)
-            .json({ error: "Required fields: amount, category_id, date" });
+            .json({ error: "Required fields: amount, date" });
     }
 
     try {
         const newId = IncomesModel.createIncome({
             name,
             amount,
-            category_id,
-            subcategory_id,
             date,
-            payment_method_id,
         });
 
         res.status(201).json({ id: newId });

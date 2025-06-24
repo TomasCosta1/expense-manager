@@ -1,8 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import MiniBoxData from '../components/MiniBoxData/MiniBoxData';
 import StatCard from '../components/StatCard';
+import { getAllAmountExpenses } from '../api/expenses';
+import { getAllAmountIncomes } from '../api/incomes'
+import Grid from '@mui/material/Grid';
 
 const Dashboard = () => {
+    const [expensesAmounts, setExpensesAmounts] = useState([]);
+    const [incomesAmounts, setIncomesAmounts] = useState([])
+
+    useEffect(() => {
+        getAllAmountExpenses().then(response => {
+            setExpensesAmounts(response.data);
+        });
+        getAllAmountIncomes().then(response => {
+            setIncomesAmounts(response.data);
+        })
+    }, []);
+
+    function calcularBalance(incomesArray, expensesArray) {
+    const totalIncome = incomesArray.reduce((acc, val) => acc + val, 0);
+
+    const days = Math.max(incomesArray.length, expensesArray.length);
+    const dailyBalance = [];
+    let remaining = 100;
+
+    for (let i = 0; i < days; i++) {
+        const gasto = expensesArray[i] || 0;
+        const gastoRelativo = (gasto / totalIncome) * 100;
+        remaining -= gastoRelativo;
+        dailyBalance.push(remaining);
+    }
+
+    return dailyBalance;
+}
+
+    console.log(expensesAmounts);
+    console.log(incomesAmounts)
+
     return (
         <div className="dashboard-page">
             <header>
@@ -10,26 +45,38 @@ const Dashboard = () => {
             </header>
             <main>
                 <section>
-                    <article>
-                        <StatCard 
-                        title="Gastos" 
-                        value="500" 
-                        interval='Ultimos 30 dias' 
-                        trend='down' 
-                        data={[699.09, 3722.78, 2758.13, 1800, 1800, 2758.23]} />
-                    </article>
-                    <article>
-                        <StatCard 
-                        title="Ingresos" 
-                        value="500" 
-                        interval='Ultimos 30 dias' 
-                        trend='up' 
-                        data={[100, 200, 300, 400]} />
-                    </article>
-                    <article>Balance</article>
-                    <article>Grafico categorias</article>
-                    <article>Comparativa mes anterior</article>
-                    <article>Historial transacciones</article>
+                    <Grid
+                        container
+                        spacing={2}
+                        columns={12}
+                    >
+                        <a href="/expenses">
+                            <StatCard
+                                title="Gastos"
+                                value={`$${expensesAmounts.reduce((acc, amount) => acc + amount, 0)}`}
+                                interval='Ultimos 30 dias'
+                                trend='down'
+                                data={expensesAmounts}
+                            />
+                        </a>
+                        <a href="/incomes">
+                        <StatCard
+                            title="Ingresos"
+                            value={`$${incomesAmounts.reduce((acc, amount) => acc + amount, 0)}`}
+                            interval='Ultimos 30 dias'
+                            trend='up'
+                            data={incomesAmounts} />
+                        </a>
+                        <StatCard
+                            title="Balance"
+                            value={`$${incomesAmounts.reduce((acc, amount) => acc + amount, 0) - expensesAmounts.reduce((acc, amount) => acc + amount, 0)}`}
+                            interval='Ultimos 30 dias'
+                            trend='neutral'
+                            data={calcularBalance(incomesAmounts, expensesAmounts)}
+                        />
+                        <article>Grafico categorias</article>
+                        <article>Comparativa mes anterior</article>
+                    </Grid>
                 </section>
             </main>
         </div>

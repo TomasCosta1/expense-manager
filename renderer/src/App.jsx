@@ -11,7 +11,7 @@ function App() {
       <div style={{ marginLeft: '250px'}}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/gastos" element={<h2>Gastos</h2>} />
+          <Route path="/expenses" element={<h2>Gastos</h2>} />
           <Route path="/ingresos" element={<h2>Ingresos</h2>} />
           <Route path="/configuracion" element={<h2>Configuracion</h2>} />
         </Routes>

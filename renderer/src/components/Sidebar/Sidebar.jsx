@@ -11,8 +11,16 @@ import {
 } from "@mui/material";
 import InboxIcon from "@mui/icons-material/Inbox";
 import MailIcon from "@mui/icons-material/Mail";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
+
+const routes = [
+    { text: "Dashboard", path: "/" },
+    { text: "Gastos", path: "/expenses" },
+    { text: "Ingresos", path: "/ingresos" },
+    { text: "Configuracion", path: "/configuracion" },
+];
 
 const Sidebar = () => {
     return (
@@ -32,30 +40,19 @@ const Sidebar = () => {
             <Toolbar />
             <Divider />
             <List>
-                {["Dashboard", "Gastos", "Ingresos", "Configuracion"].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
+                {routes.map((item, index) => (
+                    <ListItem key={item.text} disablePadding>
+                        <ListItemButton component={Link} to={item.path}>
                             <ListItemIcon>
                                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                             </ListItemIcon>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={item.text} />
                         </ListItemButton>
                     </ListItem>
                 ))}
             </List>
             <Divider />
-            <List>
-                {["---", "---", "---"].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
+            {/* Puedes agregar más items aquí */}
         </Drawer>
         </>
     );
