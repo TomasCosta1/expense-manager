@@ -24,6 +24,21 @@ exports.getSubcategoryById = (req, res) => {
     }
 }
 
+exports.getSubcategoriesByCategory = (req, res) => {
+    const { categoryId } = req.params;
+
+    if (!categoryId) {
+        return res.status(400).json({ error: "Category ID is required" });
+    }
+
+    try {
+        const subcategories = SubcategoryModel.getSubcategoriesByCategory(categoryId);
+        res.json(subcategories);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 exports.createSubcategory = (req, res) => {
     const { name, category_id } = req.body;
 

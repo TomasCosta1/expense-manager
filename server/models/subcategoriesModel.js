@@ -24,6 +24,16 @@ exports.getSubcategoryById = (id) => {
     return subcategory;
 }
 
+exports.getSubcategoriesByCategory = (categoryId) => {
+    const stmt = db.prepare(`
+        SELECT id, name
+        FROM subcategories
+        WHERE category_id = ?
+        ORDER BY name ASC
+    `);
+    return stmt.all(categoryId);
+}
+
 exports.createSubcategory = (name, category_id) => {
     const stmt = db.prepare(`
         INSERT INTO subcategories (name, category_id)
