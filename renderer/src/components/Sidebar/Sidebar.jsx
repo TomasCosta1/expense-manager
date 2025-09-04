@@ -12,6 +12,7 @@ import {
 import InboxIcon from "@mui/icons-material/Inbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { Link } from "react-router-dom";
+import './styles.css';
 
 const drawerWidth = 240;
 
@@ -32,10 +33,13 @@ const Sidebar = () => {
                 "& .MuiDrawer-paper": {
                     width: drawerWidth,
                     boxSizing: "border-box",
+                    top: "64px", // Altura estándar del header
+                    height: "calc(100% - 64px)", // Ajustar altura para no superponer
                 },
             }}
             variant="permanent"
             anchor="left"
+            className="sidebar"
         >
             <Toolbar />
             <Divider />
